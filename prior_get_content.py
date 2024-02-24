@@ -2,6 +2,13 @@ import urllib.request
 import psycopg2
 import argparse
 
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+
+
+
 parser= argparse.ArgumentParser(description='Pull front page from prior.by')
 parser.add_argument('env',metavar='1',type=str,nargs='?',help='environment, prod or dev')
 args=parser.parse_args()
@@ -33,10 +40,23 @@ def insert_content(content):
     finally:
         return record_id
     
-with urllib.request.urlopen('https://www.prior.by/web/') as f:
-    cont=f.read().decode('utf-8')
+
+
+
+#driver = webdriver.Chrome()
+#driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
+op = webdriver.ChromeOptions()
+op.add_argument('--headless')
+driver = webdriver.Chrome(options=op)
+
+driver.get("https://www.prior.by/web/")
+innerHTML = driver.execute_script("return document.body.innerHTML")
+
+
+#with urllib.request.urlopen('https://www.prior.by/web/') as f:
+#    cont=f.read().decode('utf-8')
 
 # print(cont)
 
-insert_content(cont)    
+insert_content(innerHTML)    
 
