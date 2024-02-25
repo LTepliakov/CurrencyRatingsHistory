@@ -1,6 +1,13 @@
 import urllib.request
 import psycopg2
 import argparse
+import datetime
+ 
+# using now() to get current time
+current_time = datetime.datetime.now()
+ 
+# Printing value of now.
+print("Time now at greenwich meridian is:", current_time)
 
 
 from selenium import webdriver
@@ -41,7 +48,7 @@ def insert_content(content):
         return record_id
     
 
-
+print(datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+"  --------------")
 
 #driver = webdriver.Chrome()
 #driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
