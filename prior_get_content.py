@@ -48,7 +48,7 @@ def insert_content(content):
         return record_id
     
 
-print(datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+"  --------------")
+print(datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S")+"  --------------")
 
 #driver = webdriver.Chrome()
 #driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
