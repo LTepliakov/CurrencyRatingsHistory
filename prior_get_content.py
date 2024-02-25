@@ -54,7 +54,7 @@ print(datetime.datetime.now().strftime("%m/%d/%Y, %H:%M:%S")+"  --------------")
 #driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()))
 op = webdriver.ChromeOptions()
 op.add_argument('--headless')
-driver = webdriver.Chrome(options=op)
+driver = webdriver.Chrome(options=op,service=ChromeService(ChromeDriverManager().install()))
 
 driver.get("https://www.prior.by/web/")
 innerHTML = driver.execute_script("return document.body.innerHTML")
