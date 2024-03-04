@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.1.0-beta1" use-changelog="false" last-position="0,7" last-zoom="1" max-obj-count="4"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<role name="scott"
+ superuser="true"
+ inherit="true"
+ login="true"
+ password="********">
+</role>
+
+<database name="currency_rates_dev" encoding="UTF8" lc-collate="en_US.UTF-8" lc-ctype="en_US.UTF-8" is-template="false" allow-conns="true">
+	<role name="postgres"/>
+	<tablespace name="pg_default"/>
+</database>
+
+<schema name="public" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<schema name="raw" layers="0" rect-visible="true" fill-color="#efc6ea" name-color="#000000">
+	<role name="postgres"/>
+</schema>
+
+<schema name="prior" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#31363b">
+	<role name="postgres"/>
+</schema>
+
+<sequence name="prior_web_content_record_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+	<schema name="raw"/>
+	<role name="postgres"/>
+</sequence>
+
+<table name="prior_web_content" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="raw"/>
+	<role name="postgres"/>
+	<position x="60" y="60"/>
+	<column name="record_id" not-null="true" sequence="raw.prior_web_content_record_id_seq">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="content">
+		<type name="character varying" length="0"/>
+	</column>
+	<column name="insert_timestamp">
+		<type name="timestamp" length="0"/>
+	</column>
+	<constraint name="prior_web_content_pkey" type="pk-constr" table="raw.prior_web_content">
+		<columns names="record_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="currency_rate_history" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
+	<schema name="prior"/>
+	<role name="postgres"/>
+	<position x="60" y="280"/>
+	<column name="client_currency_code" not-null="true">
+		<type name="character" length="5"/>
+	</column>
+	<column name="bank_currency_code" not-null="true">
+		<type name="character" length="5"/>
+	</column>
+	<column name="operation_place_code" not-null="true">
+		<type name="char" length="10"/>
+	</column>
+	<column name="operation_code" not-null="true">
+		<type name="char" length="10"/>
+	</column>
+	<column name="currency_buy_rate" not-null="true">
+		<type name="numeric" length="10" precision="4"/>
+	</column>
+	<column name="buy_rate_coefficient" not-null="true" default-value="1">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="currency_sell_rate" not-null="true">
+		<type name="numeric" length="10" precision="4"/>
+	</column>
+	<column name="sell_rate_coefficient" not-null="true" default-value="1">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="low_limit_amount" default-value="null">
+		<type name="numeric" length="10" precision="4"/>
+	</column>
+	<column name="high_limit_amount" default-value="null">
+		<type name="numeric" length="10" precision="4"/>
+	</column>
+	<column name="valid_from_datetime" not-null="true" default-value="current_date">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="insert_timestamp" not-null="true" default-value="current_date">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<constraint name="currency_rate_history_pk" type="pk-constr" table="prior.currency_rate_history">
+		<columns names="client_currency_code,bank_currency_code,operation_place_code,operation_code,valid_from_datetime" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+</dbmodel>
