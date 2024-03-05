@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.1.0-beta1" use-changelog="false" last-position="0,7" last-zoom="1" max-obj-count="4"
+<dbmodel pgmodeler-ver="1.1.0-beta1" use-changelog="false" last-position="0,56" last-zoom="1" max-obj-count="6"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -33,6 +33,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </schema>
 
+<schema name="prior_cp" layers="0" rect-visible="true" fill-color="#e1e1e1" name-color="#31363b">
+	<role name="postgres"/>
+</schema>
+
 <sequence name="prior_web_content_record_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
 	<schema name="raw"/>
 	<role name="postgres"/>
@@ -56,21 +60,17 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="currency_rate_history" layers="0" collapse-mode="2" max-obj-count="14" z-value="0">
+<sequence name="currency_rate_list_seq" cycle="false" start="1" increment="1" min-value="0" max-value="2147483647" cache="1">
 	<schema name="prior"/>
 	<role name="postgres"/>
-	<position x="60" y="280"/>
-	<column name="client_currency_code" not-null="true">
-		<type name="character" length="5"/>
-	</column>
-	<column name="bank_currency_code" not-null="true">
-		<type name="character" length="5"/>
-	</column>
-	<column name="operation_place_code" not-null="true">
-		<type name="char" length="10"/>
-	</column>
-	<column name="operation_code" not-null="true">
-		<type name="char" length="10"/>
+</sequence>
+
+<table name="currency_rate_list" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+	<schema name="prior"/>
+	<role name="postgres"/>
+	<position x="860" y="300"/>
+	<column name="currency_rate_list_id">
+		<type name="integer" length="0"/>
 	</column>
 	<column name="currency_buy_rate" not-null="true">
 		<type name="numeric" length="10" precision="4"/>
@@ -84,21 +84,62 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="sell_rate_coefficient" not-null="true" default-value="1">
 		<type name="smallint" length="0"/>
 	</column>
-	<column name="low_limit_amount" default-value="null">
-		<type name="numeric" length="10" precision="4"/>
+	<column name="low_limit_amount" not-null="true" default-value="0">
+		<type name="numeric" length="10" precision="0"/>
 	</column>
 	<column name="high_limit_amount" default-value="null">
 		<type name="numeric" length="10" precision="4"/>
 	</column>
+	<column name="insert_timestamp" not-null="true" default-value="current_timestamp">
+		<type name="timestamptz" length="0"/>
+	</column>
+</table>
+
+<table name="currency_rate_history" layers="0" collapse-mode="2" max-obj-count="9" z-value="0">
+	<schema name="prior"/>
+	<role name="postgres"/>
+	<position x="60" y="300"/>
+	<column name="client_currency_code" not-null="true">
+		<type name="character" length="5"/>
+	</column>
+	<column name="bank_currency_code" not-null="true">
+		<type name="character" length="5"/>
+	</column>
+	<column name="operation_place_code" not-null="true">
+		<type name="char" length="10"/>
+	</column>
+	<column name="operation_code" not-null="true">
+		<type name="char" length="10"/>
+	</column>
+	<column name="currency_rate_list_id" sequence="prior.currency_rate_list_seq">
+		<type name="integer" length="0"/>
+	</column>
 	<column name="valid_from_datetime" not-null="true" default-value="current_date">
 		<type name="timestamptz" length="0"/>
 	</column>
-	<column name="insert_timestamp" not-null="true" default-value="current_date">
+	<column name="raw_file_timestamp" default-value="null">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="insert_timestamp" not-null="true" default-value="current_timestamp">
 		<type name="timestamptz" length="0"/>
 	</column>
 	<constraint name="currency_rate_history_pk" type="pk-constr" table="prior.currency_rate_history">
 		<columns names="client_currency_code,bank_currency_code,operation_place_code,operation_code,valid_from_datetime" ref-type="src-columns"/>
 	</constraint>
+	<constraint name="currency_rate_list_id_unique" type="uq-constr" table="prior.currency_rate_history">
+		<columns names="currency_rate_list_id" ref-type="src-columns"/>
+	</constraint>
 </table>
+
+<constraint name="currency_rate_fk" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="prior.currency_rate_history" table="prior.currency_rate_list">
+	<columns names="currency_rate_list_id" ref-type="src-columns"/>
+	<columns names="currency_rate_list_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_currency_rate_list_currency_rate_history" type="relfk" layers="0"
+	 src-table="prior.currency_rate_list"
+	 dst-table="prior.currency_rate_history" reference-fk="currency_rate_fk"
+	 src-required="false" dst-required="false"/>
 
 </dbmodel>

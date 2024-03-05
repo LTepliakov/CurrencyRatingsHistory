@@ -6,19 +6,33 @@ from bs4 import BeautifulSoup
 
 import re
 
+import pandas as pd
+pd.options.display.width = 0
+
 op = webdriver.ChromeOptions()
 op.add_argument('--headless')
 driver = webdriver.Chrome(options=op,service=ChromeService(ChromeDriverManager().install()))
 #driver = webdriver.Chrome(options=op)
 
-driver.get("https://www.prior.by/web/")
-innerHTML = driver.execute_script("return document.body.innerHTML")
+#driver.get("https://www.prior.by/web/")
+#innerHTML = driver.execute_script("return document.body.innerHTML")
 
 
-#file = open("inner.html", "r")
-#innerHTML = file.read()
-#file.close()
+file = open("inner.html", "r")
+innerHTML = file.read()
+file.close()
 
+df = pd.DataFrame(columns=['client_currency_code',\
+                           'bank_currency_code',\
+                           'operation_place',\
+                           'operation_code',\
+                           'currency_buy_rate',\
+                           'buy_rate_coefficient',\
+                           'currency_sell_rate',\
+                           'sell_rate_coefficient',\
+                           'low_limit',\
+                           'high_limit',\
+                           'valid_from_datetime'])  
 
 soup_page = BeautifulSoup(innerHTML, "lxml")
 
@@ -46,7 +60,7 @@ for t in tabs:
     operation_code=t.attrs['class'][1].replace('curr','')
     op_code=operation_place
     if operation_place in ['Card','Online']:
-        low_limit=None
+        low_limit=0
         high_limit=None
         print('h3: ',t.div.div.h3.attrs['data-time'].replace('Действуют с ',''))
         valid_from_datetime = totime(t.div.div.h3.attrs['data-time'].replace('Действуют с ',''))
@@ -111,6 +125,19 @@ for t in tabs:
                         currency_buy_rate=re.sub(r'\(.*\)','',currency_buy_rate)
  
                     print('*** ',client_currency_code,bank_currency_code,operation_place,operation_code,currency_buy_rate,buy_rate_coefficient, currency_sell_rate,sell_rate_coefficient,low_limit,high_limit,valid_from_datetime)
+                    new_row={'client_currency_code':client_currency_code,\
+                           'bank_currency_code':bank_currency_code,\
+                           'operation_place':operation_place,\
+                           'operation_code':operation_code,\
+                           'currency_buy_rate':currency_buy_rate,\
+                           'buy_rate_coefficient':buy_rate_coefficient,\
+                           'currency_sell_rate':currency_sell_rate,\
+                           'sell_rate_coefficient':sell_rate_coefficient,\
+                           'low_limit':low_limit,\
+                           'high_limit':high_limit,\
+                           'valid_from_datetime':valid_from_datetime}
+                    df = df._append(new_row, ignore_index=True)
+
                 client_currency_code='---'
                 row_no=row_no+1
     else:
@@ -133,7 +160,7 @@ for t in tabs:
             table_rows=crns.table.tbody.findAll('tr',recursive=False)
             row_no=0
             for r in table_rows:
-                low_limit=None
+                low_limit=0
                 high_limit=None
  #               client_currency_code='---'
  #               bank_currency_code='---'
@@ -166,7 +193,7 @@ for t in tabs:
                         bank_currency_code=m.group(2)
                     else:
                         m=low_limit_mask.match(row_list[0])
-                        low_limit=m.group(1).replace(' ','') if m else None
+                        low_limit=m.group(1).replace(' ','') if m else 0
                         m=high_limit_mask.match(row_list[0])
                         high_limit=m.group(1).replace(' ','') if m else None
 
@@ -183,7 +210,21 @@ for t in tabs:
                         currency_buy_rate=re.sub(r'\(.*\)','',currency_buy_rate)
   
                     print('*** ',client_currency_code,bank_currency_code,operation_place,operation_code, currency_buy_rate, buy_rate_coefficient,currency_sell_rate,sell_rate_coefficient,low_limit,high_limit,valid_from_datetime)
-                
+                    new_row={'client_currency_code':client_currency_code,\
+                           'bank_currency_code':bank_currency_code,\
+                           'operation_place':operation_place,\
+                           'operation_code':operation_code,\
+                           'currency_buy_rate':currency_buy_rate,\
+                           'buy_rate_coefficient':buy_rate_coefficient,\
+                           'currency_sell_rate':currency_sell_rate,\
+                           'sell_rate_coefficient':sell_rate_coefficient,\
+                           'low_limit':low_limit,\
+                           'high_limit':high_limit,\
+                           'valid_from_datetime':valid_from_datetime}
+                    df = df._append(new_row, ignore_index=True)    
                 row_no=row_no+1
+    
+print(df)
                 
 
+df.to_pickle("CurrencyRates.pkl") 
