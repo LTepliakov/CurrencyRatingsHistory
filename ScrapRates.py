@@ -1,3 +1,5 @@
+import datetime
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -10,6 +12,8 @@ import pandas as pd
 pd.options.display.width = 0
 
 from ScrapCurrRatesPrior import scrapCurrRatesPrior 
+from LoadDF2DB import loadDF2DB
+
 
 op = webdriver.ChromeOptions()
 op.add_argument('--headless')
@@ -20,7 +24,6 @@ driver = webdriver.Chrome(options=op,service=ChromeService(ChromeDriverManager()
 #driver.get("https://www.prior.by/web/")
 #innerHTML = driver.execute_script("return document.body.innerHTML")
 
-
 file = open("inner.html", "r")
 page = file.read()
 file.close()
@@ -28,7 +31,10 @@ file.close()
 
 df=scrapCurrRatesPrior(page)
 
-print(df)
-                
+# print(df)
 
-df.to_pickle("CurrencyRates.pkl") 
+# df.to_pickle("CurrencyRates.pkl") 
+
+loadDF2DB(df,datetime.datetime.now(),"dev")
+
+

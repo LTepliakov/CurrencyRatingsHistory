@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.1.0-beta1" use-changelog="false" last-position="0,56" last-zoom="1" max-obj-count="6"
+<dbmodel pgmodeler-ver="1.1.0-beta1" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="6"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -37,7 +37,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </schema>
 
-<sequence name="prior_web_content_record_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+<sequence name="prior_web_content_record_id_seq_bkp" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
 	<schema name="raw"/>
 	<role name="postgres"/>
 </sequence>
@@ -46,7 +46,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="raw"/>
 	<role name="postgres"/>
 	<position x="60" y="60"/>
-	<column name="record_id" not-null="true" sequence="raw.prior_web_content_record_id_seq">
+	<column name="record_id" not-null="true" sequence="raw.prior_web_content_record_id_seq_bkp">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="content">
@@ -132,7 +132,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </table>
 
 <constraint name="currency_rate_fk" type="fk-constr" comparison-type="MATCH FULL"
-	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="prior.currency_rate_history" table="prior.currency_rate_list">
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="prior.currency_rate_history" table="prior.currency_rate_list">
 	<columns names="currency_rate_list_id" ref-type="src-columns"/>
 	<columns names="currency_rate_list_id" ref-type="dst-columns"/>
 </constraint>
@@ -140,6 +140,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <relationship name="rel_currency_rate_list_currency_rate_history" type="relfk" layers="0"
 	 src-table="prior.currency_rate_list"
 	 dst-table="prior.currency_rate_history" reference-fk="currency_rate_fk"
-	 src-required="false" dst-required="false"/>
+	 src-required="false" dst-required="false">
+	<label ref-type="name-label">
+		<position x="0" y="0"/>
+	</label>
+</relationship>
 
 </dbmodel>
