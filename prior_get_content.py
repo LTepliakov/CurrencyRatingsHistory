@@ -2,6 +2,7 @@ import urllib.request
 import psycopg2
 import argparse
 import datetime
+
  
 # using now() to get current time
 current_time = datetime.datetime.now()

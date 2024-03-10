@@ -32,18 +32,27 @@ try:
         with  conn.cursor(getLastUpdateTS) as cur:
             cur.execute(getLastUpdateTS)
             row=cur.fetchone()
- 
+            print ('---',row[0])
+            if row[0] is None:
+                ts='2024-01-06 00:00:00.0+03:00'
+#                print('a')
+            else:
+                ts=row[0]
+#                print('b')
+#            print('---',ts)
+
     with  psycopg2.connect(dbname="currency_rates_"+args.env\
                            , user="postgres"\
                            , host="127.0.0.1"\
                            , port="5432") as conn:
         with  conn.cursor() as cur:
             # execute the INSERT statement
-            cur.execute(getNewRawData,{'last_load_timestamp':row[0]})
+            cur.execute(getNewRawData,{'last_load_timestamp':ts})
             for row in cur:
                 
                 content=row[1] #.replace('\r\n','\n')
                 timestamp=row[2]
+                print(row[2])
 
                 df=scrapCurrRatesPrior(content)                    
                 loadDF2DB(df,timestamp,args.env)

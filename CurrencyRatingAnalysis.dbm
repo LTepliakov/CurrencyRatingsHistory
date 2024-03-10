@@ -37,7 +37,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </schema>
 
-<sequence name="prior_web_content_record_id_seq_bkp" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
+<sequence name="prior_web_content_record_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
 	<schema name="raw"/>
 	<role name="postgres"/>
 </sequence>
@@ -46,7 +46,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="raw"/>
 	<role name="postgres"/>
 	<position x="60" y="60"/>
-	<column name="record_id" not-null="true" sequence="raw.prior_web_content_record_id_seq_bkp">
+	<column name="record_id" not-null="true" sequence="raw.prior_web_content_record_id_seq">
 		<type name="integer" length="0"/>
 	</column>
 	<column name="content">
@@ -117,7 +117,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="valid_from_datetime" not-null="true" default-value="current_date">
 		<type name="timestamptz" length="0"/>
 	</column>
-	<column name="raw_file_timestamp" default-value="null">
+	<column name="raw_data_timestamp" default-value="null">
 		<type name="timestamptz" length="0"/>
 	</column>
 	<column name="insert_timestamp" not-null="true" default-value="current_timestamp">

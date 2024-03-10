@@ -118,6 +118,7 @@ def scrapCurrRatesPrior(innerHTML):
             currencies=t.div.findAll('div',recursive=False)
             for crns in currencies:
                 client_currency_code='BYN'
+                bank_currency_code=crns.attrs['id'].replace('currRates','').upper()
                 cash_operration_code=crns.attrs['id'].replace('curr','')
                 if cash_operration_code[0:5] == 'Rates':
                     bank_currency_code=cash_operration_code[5:].upper()
