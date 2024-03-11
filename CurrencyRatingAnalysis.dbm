@@ -100,10 +100,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 	<position x="60" y="300"/>
 	<column name="client_currency_code" not-null="true">
-		<type name="character" length="5"/>
+		<type name="character" length="3"/>
 	</column>
 	<column name="bank_currency_code" not-null="true">
-		<type name="character" length="5"/>
+		<type name="character" length="3"/>
 	</column>
 	<column name="operation_place_code" not-null="true">
 		<type name="char" length="10"/>
