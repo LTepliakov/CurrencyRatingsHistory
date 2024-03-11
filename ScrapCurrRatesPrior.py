@@ -86,11 +86,14 @@ def scrapCurrRatesPrior(innerHTML):
                             m=currency_mask.match(row_list[0])
                             client_currency_code=m.group(1)
                             bank_currency_code=m.group(2)
+                        else:
+                            bank_currency_code=row_list[0]
 
                         buy_rate_coefficient=1
                         sell_rate_coefficient=1
                         currency_buy_rate=row_list[1]
                         currency_sell_rate=row_list[2]
+                        
                         if bank_currency_code=='RUB':
                             if operation_code=='Exc':
                                 sell_rate_coefficient=100

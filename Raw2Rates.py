@@ -34,7 +34,7 @@ try:
             row=cur.fetchone()
             print ('---',row[0])
             if row[0] is None:
-                ts='2024-01-06 00:00:00.0+03:00'
+                ts='2000-01-01 00:00:00.0+03:00'
 #                print('a')
             else:
                 ts=row[0]
@@ -54,7 +54,8 @@ try:
                 timestamp=row[2]
                 print(row[2])
 
-                df=scrapCurrRatesPrior(content)                    
+                df=scrapCurrRatesPrior(content) 
+#                df.to_pickle("./dummy.pkl")                   
                 loadDF2DB(df,timestamp,args.env)
 except (Exception, psycopg2.DatabaseError) as error:
     print(error)    
