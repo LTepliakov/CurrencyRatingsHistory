@@ -2,6 +2,8 @@ name: Get raw page from Prior
 run-name: Getting raw page data by the schedule on $(date +'%Y-%m-%d_%H:%M:')
 on: 
   workflow_dispatch:
+  schedule:
+    - cron: '5 7,13 * * *'
     
 jobs:
   Parse-Materializations:
