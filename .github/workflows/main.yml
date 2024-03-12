@@ -30,7 +30,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add prior_page.html
+          git add prior_page*.html
           git commit  -m "Added raw page from Prior" 
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
