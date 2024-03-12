@@ -1,5 +1,5 @@
-name: Parse DBT materializations
-run-name: Parsing materializations after push by ${{ github.actor }} 🚀
+name: Get raw page from Prior
+run-name: Getting raw page data by the schedule on $(date +'%Y-%m-%d_%H:%M:')
 on: 
   workflow_dispatch:
     
