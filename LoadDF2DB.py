@@ -1,4 +1,12 @@
 # LoadDF2DB
+# 
+# This module provides loadDF2DB function which loads currency rates data into database 
+# It takes three input parameters:
+# - dataframe with currency rates intofmation
+# - timestamp of a raw record (file), from which this information was scrapped
+# - environment (dev or prod) to which dataframe data will be loaded.
+#
+# leotepl@gmail.com 
 
 import psycopg2
 import pandas as pd
@@ -6,10 +14,13 @@ import pandas as pd
 
 
 def loadDF2DB(df,timestamp,env):
-#    print('ts=',timestamp)
-
+    
+    #   prepare keys dataframe from which  primary key values will be loaded into prior.currency_rate_history table
     keys=df[['client_currency_code','bank_currency_code','operation_place','operation_code','valid_from_datetime']].drop_duplicates().reset_index()
 
+    #  The query to insert data to prior.currency_rate_history. The row is inserted only if the row with same key values does not already exists.
+    #  It may happen that the raw page was pulled from the site by the schedule, but bank did not change rates since previous pull.
+    #  The query returns ID of inserted record to use as a reference in the child table
     sql1="""
     INSERT INTO prior.currency_rate_history
             (  client_currency_code,     bank_currency_code,     operation_place_code,     operation_code,     valid_from_datetime,     raw_data_timestamp)
@@ -28,6 +39,8 @@ def loadDF2DB(df,timestamp,env):
 
     """
 
+
+    # The query to insert currency rates to child table.
     sql2="""
     INSERT INTO prior.currency_rate_list
             (currency_rate_list_id,     currency_buy_rate,     buy_rate_coefficient,     currency_sell_rate,     sell_rate_coefficient,     low_limit_amount,     high_limit_amount)
@@ -35,6 +48,7 @@ def loadDF2DB(df,timestamp,env):
     ;
     """
 
+    # CHeck that current keys of data to be inserted are not already in the table. 
     sql3="""
     select count(*) from prior.currency_rate_history
     where client_currency_code  = %(client_currency_code)s
@@ -61,7 +75,7 @@ def loadDF2DB(df,timestamp,env):
                                 'valid_from_datetime':keys['valid_from_datetime'][ind]
                                 })
                     count=cur.fetchone()[0]
-                    if count==0:
+                    if count==0:                # go ahead with insertion only if this key is not already in the parent table.                
                         cur.execute(sql1,
                                 {'client_currency_code':keys['client_currency_code'][ind],
                                 'bank_currency_code':keys['bank_currency_code'][ind],
@@ -71,18 +85,19 @@ def loadDF2DB(df,timestamp,env):
                                 'raw_data_timestamp':timestamp
                                 })
                     
-                        currency_list_id=cur.fetchone()[0]
+                        currency_list_id=cur.fetchone()[0]   # ID of parent table record to be used as a reference in the child
  
+                        #  get the currency rates data rows to be inserted to child table
                         currency_list=df[(keys['client_currency_code'][ind]==df['client_currency_code']) &
                                         (keys['bank_currency_code'][ind]==df['bank_currency_code']) &
                                         (keys['operation_place'][ind]==df['operation_place']) &
                                         (keys['operation_code'][ind]==df['operation_code']) &
                                         (keys['valid_from_datetime'][ind]==df['valid_from_datetime']) 
                                         ]
-
+                        # insert into child table
                         for l in currency_list.index:
                             cur.execute(sql2,
-                                        {'currency_rate_list_id':currency_list_id,
+                                        {'currency_rate_list_id':currency_list_id,      # ref to parent table
                                         'currency_buy_rate':currency_list['currency_buy_rate'][l],   
                                         'buy_rate_coefficient':currency_list['buy_rate_coefficient'][l],
                                         'currency_sell_rate':currency_list['currency_sell_rate'][l],
@@ -95,7 +110,5 @@ def loadDF2DB(df,timestamp,env):
                 # commit the changes to the database
                 conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)    
+        print('LoadDF2DB: exception: ',error)    
 
-#ddf = pd.read_pickle(r'CurrencyRates.pkl')
-#loadDF2DB(ddf)

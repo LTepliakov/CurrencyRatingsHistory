@@ -1,9 +1,10 @@
-#  ScrapCurrRatesPrior
-#import pandas as pd
+# This module defines the function that takes raw html page input and exetracts currency rates from it using BeautifulSoup.
+# The result is returned in the form of pandas dataframe.
+# leotepl@gmail.com
 
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
+#from selenium import webdriver
+#from selenium.webdriver.chrome.service import Service as ChromeService
+#from webdriver_manager.chrome import ChromeDriverManager
 
 from bs4 import BeautifulSoup
 
@@ -31,25 +32,29 @@ def scrapCurrRatesPrior(innerHTML):
 
     body=soup_page.find('div', class_='currency_rate')
 
+    if not body:
+        return(df)
+
     tabarea=body.find('div',class_="tabs_area")
 
     tabs=tabarea.findAll('div',recursive=False)
 
-    time_mask=re.compile('([0-9][0-9]):([0-9][0-9]) ([0-9][0-9])\.([0-9][0-9])\.([0-9][0-9][0-9][0-9]).*')
-    currency_mask=re.compile('([A-Z][A-Z][A-Z])/([A-Z][A-Z][A-Z].*)')
-    low_limit_mask=re.compile(r'.*от ([\d\ ]+)')
-    high_limit_mask=re.compile(r'.*до ([\d\ ]+)')
-    #coeff_mask=re.compile(.*(\([0-9]+\)))
+    # define regular expressions that will be used in scrapping 
 
-    def totime(tag_line):
+    currency_mask=re.compile('([A-Z][A-Z][A-Z])/([A-Z][A-Z][A-Z].*)')   # it is used to extract currency codes that take part in conversion
+    low_limit_mask=re.compile(r'.*от ([\d\ ]+)')                        # to extract low and high curreccy amount, when the rate depends on exchanged amount
+    high_limit_mask=re.compile(r'.*до ([\d\ ]+)')
+    time_mask=re.compile('([0-9][0-9]):([0-9][0-9]) ([0-9][0-9])\.([0-9][0-9])\.([0-9][0-9][0-9][0-9]).*') # to ectract valid from time 
+    
+    def totime(tag_line):           # the function that takes valid from time from the tag and returns time stamp in ISO format
         m=time_mask.match(tag_line.strip())
         return m.group(5)+'-'+m.group(4)+'-'+m.group(3)+'T'+m.group(1)+':'+m.group(2)+':00+03:00'
 
-    for t in tabs:
+    for t in tabs:                  # loop by tabs 
         operation_place=t.attrs['class'][1].replace('curr','')
         operation_code=t.attrs['class'][1].replace('curr','')
         op_code=operation_place
-        if operation_place in ['Card','Online']:
+        if operation_place in ['Card','Online']:  # rates are organized differnently or cash exchange then for cards and online banking, that's why we have this two branches
             low_limit=0
             high_limit=None
             valid_from_datetime = totime(t.div.div.h3.attrs['data-time'].replace('Действуют с ',''))
@@ -101,7 +106,9 @@ def scrapCurrRatesPrior(innerHTML):
     
                             currency_sell_rate=re.sub(r'\(.*\)','',currency_sell_rate)
                             currency_buy_rate=re.sub(r'\(.*\)','',currency_buy_rate)
-    
+
+                        # fill in the dictionary with scrapping results to be added as dataframe row 
+
                         new_row={'client_currency_code':client_currency_code,\
                             'bank_currency_code':bank_currency_code,\
                             'operation_place':operation_place,\
@@ -117,7 +124,7 @@ def scrapCurrRatesPrior(innerHTML):
 
                     client_currency_code='---'
                     row_no=row_no+1
-        else:
+        else:                                                   # the branch for cash exchange
             currencies=t.div.findAll('div',recursive=False)
             for crns in currencies:
                 client_currency_code='BYN'
@@ -170,6 +177,8 @@ def scrapCurrRatesPrior(innerHTML):
                                 buy_rate_coefficient=100
                             currency_sell_rate=re.sub(r'\(.*\)','',currency_sell_rate)
                             currency_buy_rate=re.sub(r'\(.*\)','',currency_buy_rate)
+
+                        # fill in the dictionary with scrapping results to be added as dataframe row 
     
                         new_row={'client_currency_code':client_currency_code,\
                             'bank_currency_code':bank_currency_code,\
