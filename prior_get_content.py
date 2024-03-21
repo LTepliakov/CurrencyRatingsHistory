@@ -52,10 +52,10 @@ def insert_content(content):
 print(parser.prog+": "+datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S")+" started on "+args.env )
 
 # initialize selenium
-
 op = webdriver.ChromeOptions()
 op.add_argument('--headless')
-driver = webdriver.Chrome(options=op,service=ChromeService(ChromeDriverManager().install()))
+#driver = webdriver.Chrome(options=op,service=ChromeService(ChromeDriverManager().install()))
+driver = webdriver.Chrome(options=op)
 
 driver.get("https://www.prior.by/web/")                                 # get source page
 innerHTML = driver.execute_script("return document.body.innerHTML")     # execute script on source
