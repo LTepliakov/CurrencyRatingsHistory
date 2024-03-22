@@ -1,5 +1,5 @@
-# This script pulls from GitHub repository raw Prior Bank html pages that was committed by GitHub action
-# on cron time schedule. Then it scraps information on currency rates and loads it to postgres database.
+# This script pulls from GitHub repository raw Prior Bank html pages that was committed by GitHub action 
+# on cron time schedule. (prior_get_content_gh.py) Then it scraps information on currency rates and loads it to postgres database.
 # After currency rates are loade to database, raw file is saved in compressed format to backup folder and
 # then deleted from git. When all files are processed git changes are committed to GitHub. 
 #
@@ -36,7 +36,7 @@ timestamp_mask=re.compile('.*prior_page_(\d\d\d\d-\d\d-\d\d)_(\d\d:\d\d:\d\d)\.h
 
 def file_name_timestamp(f):
     m=timestamp_mask.match(f)
-    return (m.group(1)+' '+m.group(2))+'+00:00'
+    return (m.group(1)+' '+m.group(2))+'+00:00'  # timestamp on file name is in GMT
 
 my_repo = git.Repo(gitRepoPath)  # initialize git repository object
 my_repo.git.checkout('master')   # checkout master branch

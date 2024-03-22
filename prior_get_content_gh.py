@@ -2,12 +2,11 @@
 # This script pulls page from www.prior.by using selenium, executes java on it and saves result in html file, 
 # File name contains timestamp of the moment it is done.
 # The script is run by GitHub action on crontat schedlule. GitHub action commits the file to repository.
-# Time to time the script on PC pull newly comitted files from GitHub scraps currency rates data and removes them from repository.
+# Time to time Raw2RatesGH.py script on PC pulls newly comitted files from GitHub, scraps currency rates data and removes them from repository.
 #
 # leotepl@gmail.com
 
 import datetime
-
  
 # using now() to get current time
 current_time = datetime.datetime.now()
