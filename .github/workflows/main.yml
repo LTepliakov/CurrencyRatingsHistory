@@ -3,9 +3,9 @@ run-name: Getting raw page data by the schedule.
 on: 
   workflow_dispatch:
   schedule:
-    - cron: '5 7,13 * * *'
+    - cron: '5 8,11,14,17 * * *'
     
-jobs:
+jobs:,
   Parse-Materializations:
     runs-on: ubuntu-latest
     steps:
