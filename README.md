@@ -1,6 +1,6 @@
 This is self education training project.
 
-Scrap information about currency ratings from prior.by page of PriorBank in Belarus.
+Scrap information about currency ratings from bank web page.
 Place it into posgresql database.
 
 Skills tranied:
