@@ -35,7 +35,7 @@ jobs:
           git add prior_page*.html
           git commit  -m "Added raw page from Prior" 
       - name: push changes
-        uses: ad-m/github-push-action@v0.8
+        uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: master 
