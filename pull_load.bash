@@ -1,8 +1,10 @@
 #!/bin/bash 
 
+
+script_name=$(basename "$0")
 today=$(date +%Y-%m-%d+%T)  
 # echo "$today --- $0 $1  " >> /opt/CurrencyRatingAnalysis/logs/log.txt 2>&1
-echo "$0: $today : started on $1 " >> /opt/CurrencyRatingAnalysis/logs/log.txt 2>&1
+echo "$script_name : $today : started on $1 " >> /opt/CurrencyRatingAnalysis/logs/log.txt 2>&1
 
 #echo "nuber of agrs = $#"
 #echo $1
