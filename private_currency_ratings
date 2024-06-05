@@ -1,0 +1,10 @@
+# This is logrotate configuration file for currency ratings analysis private project
+# It's place is in /etc/logrotate.d/ directory
+
+
+/opt/CurrencyRatingAnalysis/logs/log.txt {
+    daily
+    rotate 5
+    compress
+    size 100k
+}
