@@ -6,5 +6,4 @@
     daily
     rotate 5
     compress
-    size 100k
 }
