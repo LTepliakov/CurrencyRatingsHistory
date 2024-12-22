@@ -1,5 +1,7 @@
+
 # This script pulls from GitHub repository raw Prior Bank html pages that was committed by GitHub action 
 # on cron time schedule. (prior_get_content_gh.py) Then it scraps information on currency rates and loads it to postgres database.
+
 # After currency rates are loade to database, raw file is saved in compressed format to backup folder and
 # then deleted from git. When all files are processed git changes are committed to GitHub. 
 #
@@ -20,13 +22,13 @@ from LoadDF2DB import loadDF2DB
 
 # parsing input arguments
 
-parser= argparse.ArgumentParser(description='Pull front page from prior.by')
+parser= argparse.ArgumentParser(description='Pull raw pages from GitHub, scrap currency rates and load to local database')
 parser.add_argument('env',metavar='1',type=str,nargs='?',help='environment, prod or dev')
 args=parser.parse_args()
 
 print(parser.prog+": "+datetime.datetime.now().strftime("%Y-%m-%d, %H:%M:%S")+" started on "+args.env )
 
-# defining consgants
+# defining constants
 
 rawBackupPath='/opt/CurrencyRatingAnalysis/RawFilesBackup/'  # backup folder for raw files
 gitRepoPath='/opt/CurrencyRatingAnalysis/github'             # path to local git repo
@@ -61,7 +63,7 @@ if file_list:                    # if the list is not empty, process it
         df=scrapCurrRatesPrior(content)     # get currency rate information into pandas dataframe
 
         if df.shape[0]>0:
-            loadDF2DB(df,timestamp,args.env)     # load data from dataframe to database
+            loadDF2DB(df,timestamp,"127.0.0.1","5432","currency_rates_"+args.env,"postgres")     # load data from dataframe to database
         else:
             print(parser.prog+": No currency rates data found in the file.")
 
