@@ -17,7 +17,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          ref: dev  # Ensure the dev branch is checked out
+          ref: neon-grafana  # Ensure the neon-grafana branch is checked out
       - name : Check ckeckout
         run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       - name: setup python
