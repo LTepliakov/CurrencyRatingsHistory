@@ -1,9 +1,13 @@
 # LoadDF2DB
 # 
 # This module provides loadDF2DB function which loads currency rates data into database 
-# It takes three input parameters:
+# It takes six input parameters:
 # - dataframe with currency rates intofmation
 # - timestamp of a raw record (file), from which this information was scrapped
+# - host address
+# - port number
+# - database name
+# - user_id (password is taken by Postgresql from ~/.pgpass file or from POSTGRES_PASSWORD environment variable)
 # - environment (dev or prod) to which dataframe data will be loaded.
 #
 # leotepl@gmail.com 
@@ -13,7 +17,7 @@ import pandas as pd
 
 
 
-def loadDF2DB(df,timestamp,env):
+def loadDF2DB(df,timestamp,host_addr,port_no,db_name,user_id):
     
     #   prepare keys dataframe from which  primary key values will be loaded into prior.currency_rate_history table
     keys=df[['client_currency_code','bank_currency_code','operation_place','operation_code','valid_from_datetime']].drop_duplicates().reset_index()
@@ -60,10 +64,10 @@ def loadDF2DB(df,timestamp,env):
     """
 
     try:
-        with  psycopg2.connect(dbname="currency_rates_"+env\
-                            , user="postgres"\
-                            , host="127.0.0.1"\
-                            , port="5432") as conn:
+        with  psycopg2.connect(dbname=db_name\
+                            , user=user_id\
+                            , host=host_addr\
+                            , port=port_no) as conn:
             with  conn.cursor() as cur:
                 # execute the INSERT statements
                 for ind in keys.index:

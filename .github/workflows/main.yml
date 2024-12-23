@@ -1,9 +1,12 @@
 name: Get raw page from Prior
-run-name: Getting raw page data by the schedule.
+run-name: Getting raw page data by the schedule, push it to master, scrap and sync to the cloud.
 on: 
   workflow_dispatch:
   schedule:
     - cron: '5 8,11,14,17 * * *'
+  push:
+    branches:
+      - master
     
 jobs:
   Parse-Materializations:
@@ -13,6 +16,8 @@ jobs:
         run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - name: Check out repository code
         uses: actions/checkout@v4
+        with:
+          ref: master  # Ensure the master branch is checked out
       - name : Check ckeckout
         run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       - name: setup python
@@ -23,8 +28,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: execute py script # run main.py
-        run: python prior_get_content_gh.py
+      - name: get raw content from prior  
+        run: 
+          python prior_get_content_gh.py
+      - name: scrap raw and load data to the cloud 
+        env: 
+          PGPASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        run: |
+          python Raw2RatesCloud.py
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
