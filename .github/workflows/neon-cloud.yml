@@ -34,7 +34,7 @@ jobs:
       - name: scrap raw and load data to the cloud 
         env: 
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        run: 
+        run: |
           echo $POSTGRES_PASSWORD
           python Raw2RatesCloud.py
       - name: List files in the repository
