@@ -1,5 +1,5 @@
 name: Get raw page from Prior
-run-name: Getting raw page data by the schedule.
+run-name: Getting raw page data by the schedule, push it to master, scrap and sync to the cloud.
 on: 
   workflow_dispatch:
   schedule:
