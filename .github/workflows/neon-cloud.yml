@@ -30,7 +30,7 @@ jobs:
           pip install -r requirements.txt
       - name: get raw content from prior  
         run: 
-          python prior_get_content_gh.py
+          python Raw2RatesCloud.py
       - name: scrap raw and load data to the cloud 
         env: 
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
