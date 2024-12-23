@@ -30,12 +30,12 @@ jobs:
           pip install -r requirements.txt
       - name: get raw content from prior  
         run: 
-          python Raw2RatesCloud.py
+          python prior_get_content_gh.py
       - name: scrap raw and load data to the cloud 
         env: 
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         run: 
-          python prior_get_content_cloud.py
+          python Raw2RatesCloud.py
       - name: List files in the repository
         run: |
           ls ${{ github.workspace }}
