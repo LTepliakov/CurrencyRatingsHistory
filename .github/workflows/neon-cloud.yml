@@ -1,9 +1,12 @@
 name: Get raw page from Prior
-run-name: Getting raw page data by the schedule.
+run-name: Getting raw page data by the schedule, push it to master, scrap and sync to the cloud.
 on: 
   workflow_dispatch:
   schedule:
     - cron: '5 8,11,14,17 * * *'
+  push:
+    branches:
+      - neon-grafana
     
 jobs:
   Parse-Materializations:
@@ -13,6 +16,8 @@ jobs:
         run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
       - name: Check out repository code
         uses: actions/checkout@v4
+          with:
+            ref: dev  # Ensure the dev branch is checked out
       - name : Check ckeckout
         run: echo "The ${{ github.repository }} repository has been cloned to the runner."
       - name: setup python
@@ -25,7 +30,7 @@ jobs:
           pip install -r requirements.txt
       - name: get raw content from prior  
         run: 
-          python prior_get_content_gh.py
+          python Raw2RatesCloud.py
       - name: scrap raw and load data to the cloud 
         env: 
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
