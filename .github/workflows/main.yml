@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '5 8,11,14,17 * * *'
-  push:
-    branches:
-      - master
     
 jobs:
   Parse-Materializations:
