@@ -17,7 +17,7 @@
 ## Process outline.
 The process has two branches.
 1. Load currency ratings data to Postgresql database on my laptop.
-2. Load currency ratings data to Postgresql database on the cloud ([Neon](https://neon.tech/)). Create Grafana dashboard with Postgresql on Neon as datasource.
+2. Load currency ratings data to Postgresql database on the cloud ([Neon](https://neon.tech/)). Visualize data on Grafana dashboard with Postgresql on Neon as datasource.
 
 ## GitHub 
 Github action runs periodically by the schedule.
