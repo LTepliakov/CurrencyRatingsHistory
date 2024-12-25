@@ -34,5 +34,9 @@ Github action runs periodically by the schedule.
  ## Grafana on cloud
  Periodically refreshes data on the dashboard panels by running SQL queries to extract specific currency exchange/conversion ratings. 
 
+## Q&A
+Q: Why GitHub action?  
+A: I could not find another free cloud resource to run this process.   
+
  ## Todo:
 Provide more details about database design and source code components.
