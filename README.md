@@ -1,8 +1,8 @@
 # Data Engineering demo project.
 
 ### Process steps:
-* Scrape currency ratings from the [Priorbank web page](https://www.prior.by/web/).
-* Upload it into PostgreSQL database.
+* Scrape curret currency ratings from the [Priorbank web page](https://www.prior.by/web/).
+* Add them to history table in PostgreSQL database.
 * Display ratings history on [Grafana dashboard.](https://leotepl.grafana.net/public-dashboards/f614b30a1e7549ae806a9f9fe6398396)
 
 ### Skills used:
@@ -16,8 +16,8 @@
 
 ## Process outline.
 The process has two branches.
-1. Load currency ratings data to PostgreSQL database on my laptop.
-2. Load currency ratings data to PostgreSQL database on the cloud ([Neon](https://neon.tech/)). Visualize data on Grafana dashboard with PostgreSQL on Neon as datasource.
+1. Load currency ratings update to history table in PostgreSQL database on my laptop.
+2. Load currency ratings update to history table in PostgreSQL database on the cloud ([Neon](https://neon.tech/)). Visualize data on Grafana dashboard with PostgreSQL on Neon as datasource.
 
 ## GitHub 
 Github Action runs periodically by the schedule.
