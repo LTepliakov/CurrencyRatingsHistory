@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '5 8,11,14,17 * * *'
-    - timezone: 'Europe/Minsk'
     
 jobs:
   Parse-Materializations:
