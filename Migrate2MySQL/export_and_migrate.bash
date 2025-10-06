@@ -9,6 +9,16 @@
 # mysql is configured with --secure-file-priv=/var/lib/mysql-files/
 # This folder is owned by mysql user id and has rwx permissions only for owner
 # Added rwx permission to gorup and added leonid to mysql group.
+# In order to keep this change permanent (not affected by package updates etc. ) i did following:
+# sudo systemctl edit mysql
+#
+# added two lines:
+#[Service]
+#ExecStartPre=/bin/chmod 770 /var/lib/mysql-files
+#
+#sudo systemctl daemon-reexec
+#sudo systemctl restart mysql
+
 # Placed csv data files to /var/lib/mysql-files/
 
 # Exporting data from Postgresql to csv viles
