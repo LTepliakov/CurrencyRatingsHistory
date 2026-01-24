@@ -120,7 +120,8 @@ def scrapCurrRatesPrior(innerHTML):
                             'low_limit':low_limit,\
                             'high_limit':high_limit,\
                             'valid_from_datetime':valid_from_datetime}
-                        df = df._append(new_row, ignore_index=True)
+#                        df = df._append(new_row, ignore_index=True)
+                        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
 
                     client_currency_code='---'
                     row_no=row_no+1
